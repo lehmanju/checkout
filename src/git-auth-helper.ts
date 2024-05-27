@@ -54,8 +54,8 @@ class GitAuthHelper {
     // Token auth header
     const serverUrl = urlHelper.getServerUrl(this.settings.githubServerUrl)
     this.tokenConfigKey = `credential.${serverUrl.origin}` // "origin" is SCHEME://HOSTNAME[:PORT]
-    this.tokenPlaceholderConfigValue = `!echo "no token set"`
-    this.tokenConfigValue = `!f() { test \"$1\" = get && echo \"password=${this.settings.authToken}\"; }; f`
+    this.tokenPlaceholderConfigValue = `***placeholder_helper***`
+    this.tokenConfigValue = `!f() { test "$1" = get && echo "password=${this.settings.authToken}"; }; f`
 
     // Instead of SSH URL
     this.insteadOfKey = `url.${serverUrl.origin}/.insteadOf` // "origin" is SCHEME://HOSTNAME[:PORT]
