@@ -170,7 +170,7 @@ class GitAuthHelper {
         const serverUrl = urlHelper.getServerUrl(this.settings.githubServerUrl);
         this.tokenConfigKey = `credential.${serverUrl.origin}`; // "origin" is SCHEME://HOSTNAME[:PORT]
         this.tokenPlaceholderConfigValue = `***placeholder_helper***`;
-        this.tokenConfigValue = `!f() { test "$1" = get && echo "password=${this.settings.authToken}"; }; f`;
+        this.tokenConfigValue = `"!f() { test \"$1\" = get && echo \"password=${this.settings.authToken}\"; }; f"`;
         // Instead of SSH URL
         this.insteadOfKey = `url.${serverUrl.origin}/.insteadOf`; // "origin" is SCHEME://HOSTNAME[:PORT]
         this.insteadOfValues.push(`git@${serverUrl.hostname}:`);
