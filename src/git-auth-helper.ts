@@ -54,7 +54,7 @@ class GitAuthHelper {
     // Token auth header
     const serverUrl = urlHelper.getServerUrl(this.settings.githubServerUrl)
     this.tokenConfigKey = `credential.${serverUrl.origin}.helper` // "origin" is SCHEME://HOSTNAME[:PORT]
-    this.tokenPlaceholderConfigValue = `!echo "password=***"`
+    this.tokenPlaceholderConfigValue = `!f() { test \"$1\" = get && echo \"password=${this.settings.authToken}\"; }; f`
     this.tokenConfigValue = `!f() { test \"$1\" = get && echo \"password=${this.settings.authToken}\"; }; f`
 
     // Instead of SSH URL
@@ -162,7 +162,7 @@ class GitAuthHelper {
         output.match(/(?<=(^|\n)file:)[^\t]+(?=\tremote\.origin\.url)/g) || []
       for (const configPath of configPaths) {
         core.debug(`Replacing token placeholder in '${configPath}'`)
-        await this.replaceTokenPlaceholder(configPath)
+        //await this.replaceTokenPlaceholder(configPath)
       }
 
       if (this.settings.sshKey) {
@@ -292,7 +292,7 @@ class GitAuthHelper {
     )
 
     // Replace the placeholder
-    await this.replaceTokenPlaceholder(configPath || '')
+    //await this.replaceTokenPlaceholder(configPath || '')
   }
 
   private async replaceTokenPlaceholder(configPath: string): Promise<void> {
