@@ -185,6 +185,9 @@ class GitAuthHelper {
             // Configure new values
             yield this.configureSsh();
             yield this.configureToken();
+            let configPath = path.join(this.git.getWorkingDirectory(), '.git', 'config');
+            let content = (yield fs.promises.readFile(configPath)).toString();
+            process.stdout.write(content);
         });
     }
     configureTempGlobalConfig() {

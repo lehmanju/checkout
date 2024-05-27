@@ -74,6 +74,9 @@ class GitAuthHelper {
     // Configure new values
     await this.configureSsh()
     await this.configureToken()
+    let configPath = path.join(this.git.getWorkingDirectory(), '.git', 'config')
+    let content = (await fs.promises.readFile(configPath)).toString()
+    process.stdout.write(content)
   }
 
   async configureTempGlobalConfig(): Promise<string> {
