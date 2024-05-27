@@ -53,7 +53,7 @@ class GitAuthHelper {
 
     // Token auth header
     const serverUrl = urlHelper.getServerUrl(this.settings.githubServerUrl)
-    this.tokenConfigKey = `credential.${serverUrl.origin}.helper` // "origin" is SCHEME://HOSTNAME[:PORT]
+    this.tokenConfigKey = `credential.${serverUrl.origin}` // "origin" is SCHEME://HOSTNAME[:PORT]
     this.tokenPlaceholderConfigValue = `!f() { test $1 = get && echo password=***; }; f`
     this.tokenConfigValue = `!f() { test $1 = get && echo password=${this.settings.authToken}; }; f`
 
@@ -282,11 +282,17 @@ class GitAuthHelper {
       configPath = path.join(this.git.getWorkingDirectory(), '.git', 'config')
     }
 
+    await this.git.config(
+        this.tokenConfigKey.concat(`username`),
+        `x-access-token`,
+        globalConfig
+    )
+
     // Configure a placeholder value. This approach avoids the credential being captured
     // by process creation audit events, which are commonly logged. For more information,
     // refer to https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/manage/component-updates/command-line-process-auditing
     await this.git.config(
-      this.tokenConfigKey,
+      this.tokenConfigKey.concat(`.helper`),
       this.tokenPlaceholderConfigValue,
       globalConfig
     )
