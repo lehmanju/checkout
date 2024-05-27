@@ -91,13 +91,9 @@ describe('git-auth-helper tests', () => {
       await fs.promises.readFile(localGitConfigPath)
     ).toString()
     process.stdout.write(configContent)
-    const basicCredential = Buffer.from(
-      `x-access-token:${settings.authToken}`,
-      'utf8'
-    ).toString('base64')
     expect(
       configContent.indexOf(
-        `credential.${expectedServerUrl}.helper \"!f() { test \\"$1\\" = get && echo \"password=${settings.authToken}\"; }; f\"`
+        `credential.${expectedServerUrl}.helper = "!f() { test \"$1\" = get && echo \"password=${settings.authToken}\"; }; f"`
       )
     ).toBeGreaterThanOrEqual(0)
   }
