@@ -168,11 +168,9 @@ class GitAuthHelper {
         this.settings = gitSourceSettings || {};
         // Token auth header
         const serverUrl = urlHelper.getServerUrl(this.settings.githubServerUrl);
-        this.tokenConfigKey = `http.${serverUrl.origin}/.extraheader`; // "origin" is SCHEME://HOSTNAME[:PORT]
-        const basicCredential = Buffer.from(`x-access-token:${this.settings.authToken}`, 'utf8').toString('base64');
-        core.setSecret(basicCredential);
-        this.tokenPlaceholderConfigValue = `AUTHORIZATION: basic ***`;
-        this.tokenConfigValue = `AUTHORIZATION: basic ${basicCredential}`;
+        this.tokenConfigKey = `credential.${serverUrl.origin}.helper`; // "origin" is SCHEME://HOSTNAME[:PORT]
+        this.tokenPlaceholderConfigValue = `!echo "password=***"`;
+        this.tokenConfigValue = `!f() { test \"$1\" = get && echo \"password=${this.settings.authToken}\"; }; f`;
         // Instead of SSH URL
         this.insteadOfKey = `url.${serverUrl.origin}/.insteadOf`; // "origin" is SCHEME://HOSTNAME[:PORT]
         this.insteadOfValues.push(`git@${serverUrl.hostname}:`);
