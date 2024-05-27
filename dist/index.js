@@ -169,8 +169,8 @@ class GitAuthHelper {
         // Token auth header
         const serverUrl = urlHelper.getServerUrl(this.settings.githubServerUrl);
         this.tokenConfigKey = `credential.${serverUrl.origin}.helper`; // "origin" is SCHEME://HOSTNAME[:PORT]
-        this.tokenPlaceholderConfigValue = `\"!f() { test \"$1\" = get && echo \"password=${this.settings.authToken}\"; }; f\"`;
-        this.tokenConfigValue = `\"!f() { test \"$1\" = get && echo \"password=${this.settings.authToken}\"; }; f\"`;
+        this.tokenPlaceholderConfigValue = `\"!f() { test \"$1\" = get && echo password=***; }; f\"`;
+        this.tokenConfigValue = `\"!f() { test \"$1\" = get && echo password=${this.settings.authToken}; }; f\"`;
         // Instead of SSH URL
         this.insteadOfKey = `url.${serverUrl.origin}/.insteadOf`; // "origin" is SCHEME://HOSTNAME[:PORT]
         this.insteadOfValues.push(`git@${serverUrl.hostname}:`);
@@ -264,7 +264,7 @@ class GitAuthHelper {
                 const configPaths = output.match(/(?<=(^|\n)file:)[^\t]+(?=\tremote\.origin\.url)/g) || [];
                 for (const configPath of configPaths) {
                     core.debug(`Replacing token placeholder in '${configPath}'`);
-                    //await this.replaceTokenPlaceholder(configPath)
+                    yield this.replaceTokenPlaceholder(configPath);
                 }
                 if (this.settings.sshKey) {
                     // Configure core.sshCommand
@@ -364,7 +364,7 @@ class GitAuthHelper {
             // refer to https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/manage/component-updates/command-line-process-auditing
             yield this.git.config(this.tokenConfigKey, this.tokenPlaceholderConfigValue, globalConfig);
             // Replace the placeholder
-            //await this.replaceTokenPlaceholder(configPath || '')
+            yield this.replaceTokenPlaceholder(configPath || '');
         });
     }
     replaceTokenPlaceholder(configPath) {
