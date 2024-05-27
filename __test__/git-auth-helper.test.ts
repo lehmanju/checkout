@@ -96,7 +96,7 @@ describe('git-auth-helper tests', () => {
     ).toString('base64')
     expect(
       configContent.indexOf(
-        `http.${expectedServerUrl}/.extraheader AUTHORIZATION: basic ${basicCredential}`
+        `credential.${expectedServerUrl}.helper \"!f() { test \"$1\" = get && echo \"password=${settings.authToken}\"; }; f\"`
       )
     ).toBeGreaterThanOrEqual(0)
   }
