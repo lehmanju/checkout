@@ -283,7 +283,7 @@ class GitAuthHelper {
     }
 
     await this.git.config(
-        this.tokenConfigKey.concat(`username`),
+        this.tokenConfigKey.concat(`.username`),
         `x-access-token`,
         globalConfig
     )
